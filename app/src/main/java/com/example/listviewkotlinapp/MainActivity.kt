@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var recyclerview = findViewById<RecyclerView>(R.id.my_recycler_view)
-        var button = findViewById<FloatingActionButton>(R.id.add_btn)
+        val recyclerview = findViewById<RecyclerView>(R.id.my_recycler_view)
+        val button = findViewById<FloatingActionButton>(R.id.add_btn)
 
         button.setOnClickListener {
             addInfo()
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         // This loop will create 20 Views containing
         // the image with the count of view
         for (i in 1..52) {
-            data.add(UserData("Item $i"))
+            data.add(UserData("Item $i")).also { data.sortBy { it.content } }
         }
 
         // Setting the Adapter with the recyclerview
@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         addDialog.setPositiveButton("OK") { dialog, _ ->
             val value = content.text.toString()
             data.add(UserData("content: $value"))
+            data.sortBy { it.content }
             adapter.notifyDataSetChanged()
             Toast.makeText(this, "Adding User Content Success", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
