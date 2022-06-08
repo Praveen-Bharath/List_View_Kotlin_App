@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         // This loop will create 20 Views containing
         // the image with the count of view
         for (i in 1..52) {
-            data.add(UserData("Item $i")).also { data.sortBy { it.content } }
+            data.add(UserData(i, "Item $i")).also { data.sortBy { it.content } }
         }
 
         // Setting the Adapter with the recyclerview
@@ -55,28 +55,27 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerview)
 
-
     }
 
     private fun addInfo() {
-        val inflter = LayoutInflater.from(this)
-        val v = inflter.inflate(R.layout.activity_edit_layout, null)
+        val inflater = LayoutInflater.from(this)
+        val v = inflater.inflate(R.layout.activity_edit_layout, null)
         val content = v.findViewById<EditText>(R.id.content_edit)
         val addDialog = AlertDialog.Builder(this)
 
         addDialog.setView(v)
         addDialog.setPositiveButton("OK") { dialog, _ ->
             val value = content.text.toString()
-            data.add(UserData("content: $value"))
+            data.add(UserData(value.length, " $value"))
             data.sortBy { it.content }
-            adapter.notifyDataSetChanged()
+            adapter.setDatas(data)
+            // adapter.notifyDataSetChanged()
             Toast.makeText(this, "Adding User Content Success", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
         addDialog.setNegativeButton("Cancel") { dialog, _ ->
             dialog.dismiss()
             Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show()
-
         }
         addDialog.create()
         addDialog.show()

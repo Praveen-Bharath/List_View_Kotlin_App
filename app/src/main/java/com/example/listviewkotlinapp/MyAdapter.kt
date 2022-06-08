@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter(private val mList: List<UserData>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+class MyAdapter(private var mList: List<UserData>) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
-    inner class UserViewHolder(val v:View):RecyclerView.ViewHolder(v){
+    inner class UserViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
         val name = v.findViewById<TextView>(R.id.textView1)
     }
+
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // inflates the card_view_design view
@@ -27,12 +29,6 @@ class MyAdapter(private val mList: List<UserData>) : RecyclerView.Adapter<MyAdap
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val ItemsViewModel = mList[position]
-
-        // sets the image to the imageview from our itemHolder class
-       // holder.imageView.setImageResource(ItemsViewModel.img)
-
-        // sets the text to the textview from our itemHolder class
-       // holder..text = ItemsViewModel.title
         holder.textView.text = ItemsViewModel.content
 
     }
@@ -42,9 +38,16 @@ class MyAdapter(private val mList: List<UserData>) : RecyclerView.Adapter<MyAdap
         return mList.size
     }
 
+    fun setDatas(newPersonList: List<UserData>) {
+        val diffUtil = MyDiffUtil(mList, newPersonList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        mList = newPersonList
+        diffResults.dispatchUpdatesTo(this)
+    }
+
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-      //  val imageView: ImageView = itemView.findViewById(R.id.image)
+        //  val imageView: ImageView = itemView.findViewById(R.id.image)
         val textView: TextView = itemView.findViewById(R.id.textView1)
     }
 }
